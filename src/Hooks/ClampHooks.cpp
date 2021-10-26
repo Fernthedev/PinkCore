@@ -141,7 +141,7 @@ MAKE_HOOK_MATCH(BeatmapObjectsDataClampPatch, &BeatmapData::$get_beatmapObjectsD
 }
 
 void InstallClampHooks(Logger &logger) {
-	SIMPLE_INSTALL_HOOK(BeatmapObjectsDataClampPatch);
+	// SIMPLE_INSTALL_HOOK(BeatmapObjectsDataClampPatch);
 	SIMPLE_INSTALL_HOOK_ORIG(NoteProcessorClampPatch);
 	SIMPLE_INSTALL_HOOK(BeatmapData_AddBeatmapObjectData);
 	SIMPLE_INSTALL_HOOK(BeatmapLineData_AddBeatmapObjectData);
