@@ -14,7 +14,7 @@ using namespace GlobalNamespace;
 
 extern Logger& getLogger();
 
-int addBeatmapObjectDataLineIndex;
+std::optional<int> addBeatmapObjectDataLineIndex;
 MAKE_HOOK_MATCH(BeatmapData_AddBeatmapObjectData, &BeatmapData::AddBeatmapObjectData, void,
 				BeatmapData *self, BeatmapObjectData *item) {
 	addBeatmapObjectDataLineIndex = item->lineIndex;
@@ -31,7 +31,10 @@ MAKE_HOOK_MATCH(BeatmapData_AddBeatmapObjectData, &BeatmapData::AddBeatmapObject
 
 MAKE_HOOK_MATCH(BeatmapLineData_AddBeatmapObjectData, &BeatmapLineData::AddBeatmapObjectData, void,
 				BeatmapLineData *self, BeatmapObjectData *item) {
-	item->lineIndex = addBeatmapObjectDataLineIndex;
+	if (addBeatmapObjectDataLineIndex) {
+		item->lineIndex = addBeatmapObjectDataLineIndex.value();
+	}
+	addBeatmapObjectDataLineIndex = std::nullopt;
 	BeatmapLineData_AddBeatmapObjectData(self, item);
 }
 
@@ -141,7 +144,7 @@ MAKE_HOOK_MATCH(BeatmapObjectsDataClampPatch, &BeatmapData::$get_beatmapObjectsD
 }
 
 void InstallClampHooks(Logger &logger) {
-	// SIMPLE_INSTALL_HOOK(BeatmapObjectsDataClampPatch);
+	SIMPLE_INSTALL_HOOK(BeatmapObjectsDataClampPatch);
 	SIMPLE_INSTALL_HOOK_ORIG(NoteProcessorClampPatch);
 	SIMPLE_INSTALL_HOOK(BeatmapData_AddBeatmapObjectData);
 	SIMPLE_INSTALL_HOOK(BeatmapLineData_AddBeatmapObjectData);
