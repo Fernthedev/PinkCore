@@ -23,12 +23,16 @@
     {
       "id": "custom-types",
       "versionRange": "^0.14.1",
-      "additionalData": {}
+      "additionalData": {
+        "includeQmod": false
+      }
     },
     {
       "id": "codegen",
       "versionRange": "^0.18.0",
-      "additionalData": {}
+      "additionalData": {
+        "includeQmod": false
+      }
     },
     {
       "id": "libcurl",
@@ -50,12 +54,16 @@
     {
       "id": "questui",
       "versionRange": "^0.12.0",
-      "additionalData": {}
+      "additionalData": {
+        "includeQmod": false
+      }
     },
     {
       "id": "songloader",
       "versionRange": "^0.8.0",
-      "additionalData": {}
+      "additionalData": {
+        "includeQmod": false
+      }
     }
   ],
   "additionalData": {}
