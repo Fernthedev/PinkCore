@@ -52,8 +52,8 @@ MAKE_AUTO_HOOK_MATCH(LevelCollectionNavigationController_HandleLevelCollectionVi
 		else
 		{
 			SongUtils::SongInfo::set_currentInfoDatValid(false);
-			RequirementUtils::onFoundRequirements().invoke(std::vector<std::string>{});
-			RequirementUtils::onFoundSuggestions().invoke(std::vector<std::string>{});
+			RequirementUtils::onFoundRequirements().invoke({});
+			RequirementUtils::onFoundSuggestions().invoke({});
 
 			INFO("Info.dat read not successful!");
 		}
@@ -66,8 +66,8 @@ MAKE_AUTO_HOOK_MATCH(LevelCollectionNavigationController_HandleLevelCollectionVi
 	else
 	{
 		SongUtils::SongInfo::set_currentInfoDatValid(false);
-		RequirementUtils::onFoundRequirements().invoke(std::vector<std::string>{});
-		RequirementUtils::onFoundSuggestions().invoke(std::vector<std::string>{});
+		RequirementUtils::onFoundRequirements().invoke({});
+		RequirementUtils::onFoundSuggestions().invoke({});
 	}
 
 	LevelCollectionNavigationController_HandleLevelCollectionViewControllerDidSelectLevel(self, viewController, level);

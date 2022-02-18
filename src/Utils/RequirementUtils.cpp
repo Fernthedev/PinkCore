@@ -36,12 +36,12 @@ static std::string removeSpaces(std::string input)
 namespace RequirementUtils
 {
 
-	std::vector<std::string> installedRequirements = {};
-	std::vector<std::string> forcedSuggestions = {};
-	std::vector<std::string> currentRequirements = {};
-	std::vector<std::string> currentSuggestions = {};
+	std::unordered_set<std::string> installedRequirements = {};
+	std::unordered_set<std::string> forcedSuggestions = {};
+    PinkCore::API::RequirementSet currentRequirements = {};
+    PinkCore::API::RequirementSet currentSuggestions = {};
 
-	std::vector<std::string> disablingModIds = {};
+	std::unordered_set<std::string> disablingModIds = {};
 	
 	FoundRequirementsEvent onFoundRequirementsEvent;
 	FoundSuggestionsEvent onFoundSuggestionsEvent;
@@ -203,18 +203,18 @@ namespace RequirementUtils
 			// if mod is loaded, put it in the list of installed requirements
 			if (mod.second.get_loaded())
 			{
-				installedRequirements.push_back(mod.second.info.id);
+				installedRequirements.emplace(mod.second.info.id);
 				INFO("Found loaded id: %s", mod.second.info.id.c_str());
 			}
 		}
 	}
 
-	const std::vector<std::string>& GetCurrentRequirements()
+	const PinkCore::API::RequirementSet& GetCurrentRequirements()
 	{
 		return currentRequirements;
 	}
 
-	const std::vector<std::string>& GetCurrentSuggestions()
+	const PinkCore::API::RequirementSet& GetCurrentSuggestions()
 	{
 		return currentSuggestions;
 	}
@@ -263,82 +263,68 @@ namespace RequirementUtils
 	{
 		bool RegisterInstalled(std::string identifier)
 		{
-			auto it = std::find(installedRequirements.begin(), installedRequirements.end(), identifier);
-
-			if (it == installedRequirements.end())
-			{
-				installedRequirements.push_back(identifier);
-				std::sort(installedRequirements.begin(), installedRequirements.end());
-				return true;
-			}
-			else return false;
+            return installedRequirements.emplace(identifier).second;
 		}
 
 		bool RemoveInstalled(std::string identifier)
 		{
-			auto it = std::find(installedRequirements.begin(), installedRequirements.end(), identifier);
-			if (it != installedRequirements.end())
-			{
-				installedRequirements.erase(it, it + 1);
-				return true;
-			}
-			else return false;
+            auto it = installedRequirements.find(identifier);
+
+            bool existed = it != installedRequirements.end();
+
+            if (existed) {
+                installedRequirements.erase(it);
+            }
+
+            return existed;
 		}
 
 		bool RegisterAsSuggestion(std::string identifier)
 		{
-			auto it = std::find(forcedSuggestions.begin(), forcedSuggestions.end(), identifier);
-
-			if (it == forcedSuggestions.end())
-			{
-				forcedSuggestions.push_back(identifier);
-				std::sort(forcedSuggestions.begin(), forcedSuggestions.end());
-				return true;
-			}
-			else return false;
+            return forcedSuggestions.emplace(identifier).second;
 		}
 		
 		bool RemoveSuggestion(std::string identifier)
 		{
-			auto it = std::find(forcedSuggestions.begin(), forcedSuggestions.end(), identifier);
-			if (it != forcedSuggestions.end())
-			{
-				forcedSuggestions.erase(it, it + 1);
-				return true;
-			}
-			else return false;
+            auto it = forcedSuggestions.find(identifier);
+
+            bool existed = it != forcedSuggestions.end();
+
+            if (existed) {
+                forcedSuggestions.erase(it);
+            }
+
+            return existed;
 		}
 
 		
 
 		void RegisterDisablingModId(std::string id)
 		{
-			auto itr = std::find(disablingModIds.begin(), disablingModIds.end(), id);
-			if (itr != disablingModIds.end()) 
+            bool existed = disablingModIds.emplace(id).second;
+
+			if (existed)
 			{
 				INFO("Mod %s is trying to disable the play button again!", id.c_str());
 				return;
 			}
-			else
-			{
-				INFO("Mod %s is disabling the play button!", id.c_str());
-				disablingModIds.push_back(id);
-				std::sort(disablingModIds.begin(), disablingModIds.end());
-			}
+
+            INFO("Mod %s is disabling the play button!", id.c_str());
 			UpdatePlayButton();
 		}
 
 		void RemoveDisablingModId(std::string id)
 		{
-			auto itr = std::find(disablingModIds.begin(), disablingModIds.end(), id);
-			if (itr != disablingModIds.end()) 
-			{
-				INFO("Mod %s is no longer disabling the play button", id.c_str());
-				disablingModIds.erase(itr, itr++);
-				return;
-			}
-			UpdatePlayButton();
-		}
+            auto it = disablingModIds.find(id);
+
+            bool existed = it != disablingModIds.end();
+
+            if (!existed) return;
+
+            INFO("Mod %s is no longer disabling the play button", id.c_str());
+            disablingModIds.erase(it);
+            UpdatePlayButton();
+        }
 	}
 
 	FoundRequirementsEvent& onFoundRequirements() {

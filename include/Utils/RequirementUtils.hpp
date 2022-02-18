@@ -5,13 +5,15 @@
 #include "GlobalNamespace/StandardLevelDetailView.hpp"
 #include "beatsaber-hook/shared/rapidjson/include/rapidjson/document.h"
 
+#include "API.hpp"
+
 namespace PinkCore::UI {
 	class RequirementHandler;
 }
 namespace RequirementUtils
 {
-	using FoundRequirementsEvent = UnorderedEventCallback<const std::vector<std::string>&>;
-	using FoundSuggestionsEvent = UnorderedEventCallback<const std::vector<std::string>&>;
+	using FoundRequirementsEvent = UnorderedEventCallback<const PinkCore::API::RequirementSet&>;
+	using FoundSuggestionsEvent = UnorderedEventCallback<const PinkCore::API::RequirementSet&>;
 
 	/// @brief handle hte requirement details so all backing information is up to date
 	//void HandleRequirementDetails(GlobalNamespace::StandardLevelDetailView* detailView);
@@ -60,10 +62,10 @@ namespace RequirementUtils
 	void UpdatePlayButton();
 
 	/// @brief gets a const reference to the current requirement vector
-	const std::vector<std::string>& GetCurrentRequirements();
+	const PinkCore::API::RequirementSet& GetCurrentRequirements();
 
 	/// @brief gets a const reference to the current suggestion vector
-	const std::vector<std::string>& GetCurrentSuggestions();
+	const PinkCore::API::RequirementSet& GetCurrentSuggestions();
 	namespace ExternalAPI
 	{
 		/// @brief

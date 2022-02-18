@@ -69,9 +69,9 @@ namespace SongUtils
 		return currentLevelPath;
 	}
 	
-	static inline std::optional<std::shared_ptr<rapidjson::GenericDocument<rapidjson::UTF16<char16_t>>>> getOptional(bool value) 
+	static inline std::optional<std::reference_wrapper<rapidjson::GenericDocument<rapidjson::UTF16<char16_t>>>> getOptional(bool value)
 	{ 
-		if (value) return currentInfoDat;
+		if (value) return std::ref(*currentInfoDat);
 		else return std::nullopt; 
 	}
 
@@ -370,21 +370,19 @@ namespace SongUtils
 			}
 		}
 
-		void ExtractRequirements(const rapidjson::GenericValue<rapidjson::UTF16<char16_t>>& requirementsArray, std::vector<std::string>& output)
+		void ExtractRequirements(const rapidjson::GenericValue<rapidjson::UTF16<char16_t>>& requirementsArray, PinkCore::API::RequirementSet& output)
 		{
 			auto actualArray = requirementsArray.GetArray();
 			for (auto& requirement : actualArray)
 			{
 				std::string requirementName = to_utf8(requirement.GetString());
-				std::string requirementNameWithoutSpaces = removeSpaces(requirementName);
+				std::string requirementNameWithoutSpaces = removeSpaces(requirementName); // TODO: Needed?
 
-				auto it = std::find(output.begin(), output.end(), requirementName);
-
-				if (it == output.end())
-					output.push_back(requirementName);
+				output.emplace(requirementName);
 			}
 
-			std::sort(output.begin(), output.end());
+			// TODO: Use sorted hash set?
+//			std::sort(output.begin(), output.end());
 		}
 	}
 

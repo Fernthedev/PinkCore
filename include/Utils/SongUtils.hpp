@@ -7,11 +7,12 @@
 #include "beatsaber-hook/shared/utils/typedefs-wrappers.hpp"
 #include "GlobalNamespace/BeatmapDifficulty.hpp"
 #include "GlobalNamespace/ColorScheme.hpp"
+#include "API.hpp"
 
 namespace SongUtils
 {
-	using LoadedInfoEvent = UnorderedEventCallback<std::optional<std::shared_ptr<rapidjson::GenericDocument<rapidjson::UTF16<char16_t>>>>>;
-	
+	using LoadedInfoEvent = UnorderedEventCallback<std::optional<std::reference_wrapper<rapidjson::GenericDocument<rapidjson::UTF16<char16_t>>>>>;
+
 	/// @brief gets the event for info loading
 	/// @return event callback reference
 	LoadedInfoEvent& onLoadedInfo();
@@ -60,7 +61,7 @@ namespace SongUtils
 		/// @brief using the requirements array, this will extract the requirements for the current array, 
 		/// @param requirementsArray the array of requirements
 		/// @param output the output to put the requirements into
-		void ExtractRequirements(const rapidjson::GenericValue<rapidjson::UTF16<char16_t>>& requirementsArray, std::vector<std::string>& output);
+		void ExtractRequirements(const rapidjson::GenericValue<rapidjson::UTF16<char16_t>>& requirementsArray, PinkCore::API::RequirementSet& output);
 
 		GlobalNamespace::ColorScheme* getCustomSongColour(GlobalNamespace::ColorScheme* defaultColorScheme, bool hasOverride);
 

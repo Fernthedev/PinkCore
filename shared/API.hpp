@@ -22,11 +22,13 @@ namespace PinkCore::API
 	/// @return optional ref, nullopt means not installed
 	LoadedInfoEvent& GetInfoDatLoadedCallbackSafe();
 
-	using FoundRequirementsEvent = UnorderedEventCallback<const std::vector<std::string>&>;
+    using RequirementSet = std::set<std::string, std::less<>>;
+
+	using FoundRequirementsEvent = UnorderedEventCallback<const RequirementSet&>;
 	/// @brief gets a reference to an even that gets ran when the requirements vector has been determined for the specific map
 	FoundRequirementsEvent& GetFoundRequirementCallbackSafe();
 	
-	using FoundSuggestionsEvent = UnorderedEventCallback<const std::vector<std::string>&>;
+	using FoundSuggestionsEvent = UnorderedEventCallback<const RequirementSet&>;
 	/// @brief gets a reference to an even that gets ran when the suggestions vector has been determined for the specific map
 	FoundSuggestionsEvent& GetFoundSuggestionCallbackSafe();
 }

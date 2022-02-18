@@ -19,6 +19,13 @@ using namespace QuestUI::BeatSaberUI;
 
 namespace PinkCore::UI
 {
+    // TODO: Move this somewhere idk
+    auto GetAtIndex(auto const& list, int index) {
+        auto it = std::begin(list);
+        std::advance(it, index);
+        return *it;
+    }
+
     void RequirementModalListTableData::ctor()
     {
         reuseIdentifier = "RequirementModalListTableCell";
@@ -121,12 +128,12 @@ namespace PinkCore::UI
 
     GlobalNamespace::LevelListTableCell* RequirementModalListTableData::GetRequirementCell(int idx)
     {
-        return GetRequirementOrSuggestionCell(RequirementUtils::GetCurrentRequirements()[idx]);
+        return GetRequirementOrSuggestionCell(GetAtIndex(RequirementUtils::GetCurrentRequirements(), idx));
     }
 
     GlobalNamespace::LevelListTableCell* RequirementModalListTableData::GetSuggestionCell(int idx)
     {
-        return GetRequirementOrSuggestionCell(RequirementUtils::GetCurrentSuggestions()[idx]);
+        return GetRequirementOrSuggestionCell(GetAtIndex(RequirementUtils::GetCurrentSuggestions(), idx));
     }
 
     GlobalNamespace::LevelListTableCell* RequirementModalListTableData::GetContributorCell(int idx)
